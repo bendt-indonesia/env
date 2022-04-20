@@ -52,6 +52,20 @@ func Load(filenames ...string) (err error) {
 	return
 }
 
+//Loading env from different folder beside root folder, should provide project-name / module-name
+func LoadEnv(ProjectDirName string) {
+	projectName := regexp.MustCompile(`^(.*` + ProjectDirName + `)`)
+	currentWorkDirectory, _ := os.Getwd()
+	rootPath := projectName.Find([]byte(currentWorkDirectory))
+
+	fmt.Println(rootPath)
+	err := Load(string(rootPath) + `/.env`)
+
+	if err != nil {
+		panic("Error loading .env file")
+	}
+}
+
 // Overload will read your env file(s) and load them into ENV for this process.
 //
 // Call this function as close as possible to the start of your program (ideally in main)
